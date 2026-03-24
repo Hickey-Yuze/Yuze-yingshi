@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useSearchHistoryStore } from "@/store/useSearchHistoryStore";
+import { useSearchScrollStore } from "@/store/useSearchScrollStore";
 import { MaterialSymbolsSearchRounded, MaterialSymbolsCloseRounded, MaterialSymbolsHistoryRounded } from "@/components/icons";
 
 export function SearchBox({ initialValue = "", onSearch, placeholder = "搜索电影、电视剧、短剧..." }) {
@@ -15,6 +16,7 @@ export function SearchBox({ initialValue = "", onSearch, placeholder = "搜索�
   const addToHistory = useSearchHistoryStore((state) => state.addToHistory);
   const removeFromHistory = useSearchHistoryStore((state) => state.removeFromHistory);
   const clearHistory = useSearchHistoryStore((state) => state.clearHistory);
+  const clearScrollPosition = useSearchScrollStore((state) => state.clearScrollPosition);
 
   // Update input value when initialValue changes
   useEffect(() => {
@@ -41,6 +43,7 @@ export function SearchBox({ initialValue = "", onSearch, placeholder = "搜索�
       const trimmedValue = inputValue.trim();
       addToHistory(trimmedValue);
       setShowHistory(false);
+      clearScrollPosition();
 
       if (onSearch) {
         onSearch(trimmedValue);
@@ -54,6 +57,7 @@ export function SearchBox({ initialValue = "", onSearch, placeholder = "搜索�
     setInputValue(item);
     setShowHistory(false);
     addToHistory(item);
+    clearScrollPosition();
 
     if (onSearch) {
       onSearch(item);

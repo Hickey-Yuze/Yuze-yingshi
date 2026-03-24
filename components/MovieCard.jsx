@@ -5,10 +5,12 @@ import { SpeedTestBadge } from "@/components/SpeedTestBadge";
 import { MaterialSymbolsStarRounded } from "@/components/icons";
 
 import { useSettingsStore } from "@/store/useSettingsStore";
+import { useSearchScrollStore } from "@/store/useSearchScrollStore";
 
 export function MovieCard({ movie }) {
   const router = useRouter();
   const doubanImageProxy = useSettingsStore((state) => state.doubanImageProxy);
+  const clearScrollPosition = useSearchScrollStore((state) => state.clearScrollPosition);
 
   let douban_image_url = movie.poster;
 
@@ -32,6 +34,7 @@ export function MovieCard({ movie }) {
       router.push(`/play/${movie.id}?source=${movie.source}`);
     } else {
       // 豆瓣卡片或红果卡片，跳转到搜索页面，使用 title 搜索
+      clearScrollPosition();
       router.push(`/search?q=${encodeURIComponent(movie.title)}`);
     }
   };

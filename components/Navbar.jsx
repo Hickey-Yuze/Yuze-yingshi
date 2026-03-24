@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { usePlayHistoryStore } from "@/store/usePlayHistoryStore";
 import { useFavoritesStore } from "@/store/useFavoritesStore";
+import { useSearchScrollStore } from "@/store/useSearchScrollStore";
 import { formatTimeShort } from "@/lib/util";
 import Image from "next/image";
 import Link from "next/link";
@@ -89,8 +90,11 @@ export function Navbar() {
     }
   };
 
+  const clearScrollPosition = useSearchScrollStore((state) => state.clearScrollPosition);
+
   const handleFavoriteClick = (favorite) => {
     setShowFavoritesDropdown(false);
+    clearScrollPosition();
     router.push(`/search?q=${encodeURIComponent(favorite.title)}`);
   };
 

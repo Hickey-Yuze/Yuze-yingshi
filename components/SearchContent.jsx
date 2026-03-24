@@ -6,6 +6,7 @@ import { MovieCard } from "@/components/MovieCard";
 import { SkeletonCard } from "@/components/SkeletonCard";
 import { SearchBox } from "@/components/SearchBox";
 import { useSettingsStore } from "@/store/useSettingsStore";
+import { useSearchScrollStore } from "@/store/useSearchScrollStore";
 import { searchVideos } from "@/lib/cmsApi";
 import {
   MaterialSymbolsSearchRounded,
@@ -28,6 +29,13 @@ export default function SearchContent() {
   const [mediaType, setMediaType] = useState("all"); // 'all', 'movie', 'tv'
   const [pageCount, setPageCount] = useState(1);
   const videoSources = useSettingsStore((state) => state.videoSources);
+  const saveScrollPosition = useSearchScrollStore((state) => state.saveScrollPosition);
+  const restoreScrollPosition = useSearchScrollStore((state) => state.restoreScrollPosition);
+  const clearScrollPosition = useSearchScrollStore((state) => state.clearScrollPosition);
+
+  // 使用 ref 保存 restoreScrollPosition，避免作为 useEffect 依赖
+  const restoreScrollPositionRef = useRef(restoreScrollPosition);
+  restoreScrollPositionRef.current = restoreScrollPosition;
 
   // 只显示已激活的源
   const enabledSources = videoSources.filter((s) => s.enabled);
@@ -49,10 +57,11 @@ export default function SearchContent() {
       } else {
         params.set("page", String(page));
       }
+      clearScrollPosition();
       router.push(`/search?${params.toString()}`);
       window.scrollTo({ top: 0, behavior: "smooth" });
     },
-    [searchParams, router],
+    [searchParams, router, clearScrollPosition],
   );
 
   const handleSourceChange = useCallback(
@@ -60,10 +69,29 @@ export default function SearchContent() {
       const params = new URLSearchParams(searchParams);
       params.set("source", sourceKey);
       params.delete("page");
+      clearScrollPosition();
       router.push(`/search?${params.toString()}`);
     },
-    [searchParams, router],
+    [searchParams, router, clearScrollPosition],
   );
+
+  // 持续监听滚动事件，保存滚动位置（防抖）
+  // 不能只在 unmount 时保存，因为 Next.js 页面切换时 window.scrollY 可能已被重置为 0
+  useEffect(() => {
+    let timer;
+    const handleScroll = () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        saveScrollPosition();
+      }, 150);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [saveScrollPosition]);
 
   // 执行搜索
   useEffect(() => {
@@ -85,6 +113,14 @@ export default function SearchContent() {
         if (searchData.results.length === 0) {
           setError("未找到相关结果，请尝试其他关键词");
         }
+
+        // 数据加载完成后恢复滚动位置
+        requestAnimationFrame(() => {
+          const savedY = restoreScrollPositionRef.current();
+          if (savedY > 0) {
+            window.scrollTo(0, savedY);
+          }
+        });
       } catch (err) {
         console.error("搜索错误:", err);
         setError("搜索失败，请稍后重试");
