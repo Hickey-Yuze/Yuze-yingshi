@@ -1,15 +1,15 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "帮助中心 - NextTV",
-  description: "NextTV 帮助中心，了解如何使用 NextTV 的各项功能",
+  title: "帮助中心 - Yuze-影视",
+  description: "Yuze-影视 帮助中心，了解如何使用 Yuze-影视 的各项功能",
 };
 
 function Section({ id, number, title, children }) {
   return (
     <section id={id} className="scroll-mt-24">
       <div className="flex items-center gap-3 mb-6">
-        <span className="flex items-center justify-center w-8 h-8 rounded-full bg-amber-100 text-amber-700 text-sm font-bold shrink-0">{number}</span>
+        <span className="flex items-center justify-center w-8 h-8 rounded-full bg-green-100 text-green-700 text-sm font-bold shrink-0">{number}</span>
         <h2 className="text-2xl font-bold text-gray-900">{title}</h2>
       </div>
       {children}
@@ -30,7 +30,7 @@ export default function HelpPage() {
       {/* Header */}
       <div className="text-center mt-8 mb-10">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">帮助中心</h1>
-        <p className="text-gray-500 text-lg max-w-2xl mx-auto">了解 NextTV 的核心功能与使用方法</p>
+        <p className="text-gray-500 text-lg max-w-2xl mx-auto">了解 Yuze-影视 的核心功能与使用方法</p>
       </div>
 
       {/* Navigation */}
@@ -39,7 +39,7 @@ export default function HelpPage() {
           <a
             key={item.id}
             href={`#${item.id}`}
-            className="px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-full hover:border-amber-300 hover:text-amber-700 hover:bg-amber-50 transition-colors"
+            className="px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-full hover:border-green-400 hover:text-green-700 hover:bg-green-50 transition-colors"
           >
             {item.label}
           </a>
@@ -88,13 +88,13 @@ export default function HelpPage() {
         {/* Section 2: Add Video Source */}
         <Section id="video-source" number="2" title="如何添加视频源">
           <div className="bg-white border border-gray-100 rounded-2xl p-6 md:p-8 space-y-6">
-            <p className="text-gray-600 leading-relaxed">视频源是 NextTV 搜索和播放视频的数据来源。你可以添加兼容 CMS 接口的资源站来扩展可搜索的内容范围。</p>
+            <p className="text-gray-600 leading-relaxed">视频源是 Yuze-影视 搜索和播放视频的数据来源。你可以添加兼容 CMS 接口的资源站来扩展可搜索的内容范围。</p>
             <div className="space-y-4">
               <h3 className="font-bold text-gray-900">操作步骤</h3>
               <ol className="list-decimal list-inside space-y-3 text-gray-600">
                 <li>
                   进入{" "}
-                  <Link href="/settings" className="text-amber-600 hover:text-amber-700 underline underline-offset-2">
+                  <Link href="/settings" className="text-green-600 hover:text-green-700 underline underline-offset-2">
                     设置页面
                   </Link>
                   ，找到「视频源管理」区域。
@@ -122,15 +122,15 @@ export default function HelpPage() {
                     href="https://github.com/hafrey1/LunaTV-config"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-amber-600 hover:text-amber-700 underline underline-offset-2 after:content-['_↗']"
+                    className="text-green-600 hover:text-green-700 underline underline-offset-2 after:content-['_↗']"
                   >
                     hafrey1/LunaTV-config
                   </a>
                 </li>
               </ol>
             </div>
-            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
-              <p className="text-sm text-amber-800">
+            <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+              <p className="text-sm text-green-800">
                 <strong>提示：</strong>
                 你可以通过拖拽箭头调整视频源的优先级顺序，搜索时排在前面的源会优先展示结果。通过开关可以临时禁用某个源而不删除它。
               </p>
@@ -141,13 +141,13 @@ export default function HelpPage() {
         {/* Section 3: Add Danmaku Source */}
         <Section id="danmaku-source" number="3" title="如何添加弹幕源">
           <div className="bg-white border border-gray-100 rounded-2xl p-6 md:p-8 space-y-6">
-            <p className="text-gray-600 leading-relaxed">弹幕源提供视频播放时的实时弹幕数据。目前 NextTV 支持配置一个弹幕源。本项目调取弹幕采用客户端直接流式获取，未经过服务器代理。</p>
+            <p className="text-gray-600 leading-relaxed">弹幕源提供视频播放时的实时弹幕数据。目前 Yuze-影视 支持配置一个弹幕源。本项目调取弹幕采用客户端直接流式获取，未经过服务器代理。</p>
             <div className="space-y-4">
               <h3 className="font-bold text-gray-900">操作步骤</h3>
               <ol className="list-decimal list-inside space-y-3 text-gray-600">
                 <li>
                   进入{" "}
-                  <Link href="/settings" className="text-amber-600 hover:text-amber-700 underline underline-offset-2">
+                  <Link href="/settings" className="text-green-600 hover:text-green-700 underline underline-offset-2">
                     设置页面
                   </Link>
                   ，找到「弹幕源管理」区域。
@@ -165,7 +165,7 @@ export default function HelpPage() {
                     href="https://github.com/SeqCrafter/danmu_api"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-amber-600 hover:text-amber-700 underline underline-offset-2 after:content-['_↗']"
+                    className="text-green-600 hover:text-green-700 underline underline-offset-2 after:content-['_↗']"
                   >
                     SeqCrafter/danmu_api
                   </a>
@@ -192,8 +192,8 @@ export default function HelpPage() {
                 </li>
               </ol>
             </div>
-            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
-              <p className="text-sm text-amber-800">
+            <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+              <p className="text-sm text-green-800">
                 <strong>注意：</strong>
                 目前仅支持添加一个弹幕源。如需更换，请先删除现有弹幕源再添加新的。你也可以在播放页面直接开关弹幕显示。
               </p>
@@ -204,7 +204,7 @@ export default function HelpPage() {
         {/* Section 4: Import & Export */}
         <Section id="import-export" number="4" title="如何导入与导出">
           <div className="bg-white border border-gray-100 rounded-2xl p-6 md:p-8 space-y-6">
-            <p className="text-gray-600 leading-relaxed">NextTV 支持将所有配置（包括视频源、弹幕源、豆瓣代理设置等）导出为 JSON 文件，方便备份和迁移到其他设备。</p>
+            <p className="text-gray-600 leading-relaxed">Yuze-影视 支持将所有配置（包括视频源、弹幕源、豆瓣代理设置等）导出为 JSON 文件，方便备份和迁移到其他设备。</p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Export */}
@@ -213,7 +213,7 @@ export default function HelpPage() {
                 <ol className="list-decimal list-inside space-y-2 text-sm text-gray-600">
                   <li>
                     进入{" "}
-                    <Link href="/settings" className="text-amber-600 hover:text-amber-700 underline underline-offset-2">
+                    <Link href="/settings" className="text-green-600 hover:text-green-700 underline underline-offset-2">
                       设置页面
                     </Link>
                     。
@@ -230,7 +230,7 @@ export default function HelpPage() {
                 <ol className="list-decimal list-inside space-y-2 text-sm text-gray-600">
                   <li>
                     进入{" "}
-                    <Link href="/settings" className="text-amber-600 hover:text-amber-700 underline underline-offset-2">
+                    <Link href="/settings" className="text-green-600 hover:text-green-700 underline underline-offset-2">
                       设置页面
                     </Link>
                     。
@@ -242,8 +242,8 @@ export default function HelpPage() {
               </div>
             </div>
 
-            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
-              <p className="text-sm text-amber-800">
+            <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+              <p className="text-sm text-green-800">
                 <strong>提示：</strong>
                 导入时支持批量添加视频源。你可以手动编辑 JSON 文件来批量配置多个视频源，然后一次性导入。导入操作会合并现有配置而非覆盖。导入格式请前往github仓库查看。
               </p>
@@ -252,23 +252,6 @@ export default function HelpPage() {
         </Section>
       </div>
 
-      {/* Footer CTA */}
-      <div className="text-center mt-14 mb-8 p-8 bg-white border border-gray-100 rounded-2xl">
-        <p className="text-gray-600 mb-4">还有其他问题？欢迎联系我们或提交 Issue。</p>
-        <div className="flex justify-center gap-4 flex-wrap">
-          <a href="mailto:sdupan2015@gmail.com" className="px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-            联系作者
-          </a>
-          <a
-            href="https://github.com/SeqCrafter/NextTV/issues"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-5 py-2.5 text-sm font-medium text-white bg-gray-900 rounded-lg hover:bg-gray-800 transition-colors"
-          >
-            提交 Issue
-          </a>
-        </div>
-      </div>
     </div>
   );
 }

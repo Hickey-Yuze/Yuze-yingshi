@@ -5,9 +5,9 @@
 @source '../pages/**/*.{js,jsx,ts,tsx,mdx}';
 
 @theme {
-  --color-primary: #fac638;
-  --color-primary-dark: #e5b120;
-  --color-background-light: #f9fafb;
+  --color-primary: #16a34a;
+  --color-primary-dark: #15803d;
+  --color-background-light: #f0fdf4;
   --color-surface-light: #ffffff;
   --color-surface-active: #f3f4f6;
   --color-danger: #ef4444;
@@ -58,11 +58,11 @@
 }
 
 .toggle-checkbox:checked + .toggle-label {
-  background-color: #fac638;
+  background-color: #22c55e;
 }
 
 .selection\:bg-primary::selection {
-  background-color: #fac638;
+  background-color: #22c55e;
 }
 
 .selection\:text-white::selection {
@@ -80,8 +80,32 @@
 /* 暂停按钮 */
 
 .art-icon-state svg {
-  fill: #fac638 !important;
+  fill: #22c55e !important;
 }
+
+/* 播放进度条 */
+.art-progress-played {
+  background-color: #22c55e !important;
+}
+
+/* 音量进度条 */
+.art-progress-volume,
+.art-volume-progress {
+  background-color: #22c55e !important;
+}
+
+/* 进度条滑块按钮 */
+.art-progress-thumb {
+  background-color: #22c55e !important;
+  border-color: #22c55e !important;
+}
+
+/* 进度条指示器 */
+.art-progress-indicator {
+  background-color: #22c55e !important;
+}
+
+
 
 /* ===== Volume Control Hover Optimization ===== */
 @media (hover: hover) {

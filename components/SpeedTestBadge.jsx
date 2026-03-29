@@ -121,7 +121,7 @@ export function SpeedTestBadge({ videoId, sourceKey, sourceName, sourceUrl }) {
   if (latency < 600) {
     colorClass = "bg-green-500/70 text-white";
   } else if (latency <= 1000) {
-    colorClass = "bg-yellow-500/70 text-black";
+    colorClass = "bg-green-500/70 text-white";
   }
 
   return (
