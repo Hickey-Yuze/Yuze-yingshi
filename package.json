@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "deploy": "npx @cloudflare/next-on-pages"
+    "deploy": "npx opennextjs-cloudflare"
   },
   "dependencies": {
     "artplayer": "^5.4.0",
