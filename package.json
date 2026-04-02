@@ -22,7 +22,6 @@
   },
   "devDependencies": {
     "@cloudflare/next-on-pages": "^1.13.0",
-    "@opennextjs/cloudflare": "^1.18.0",
     "@tailwindcss/postcss": "^4.2.2",
     "autoprefixer": "^10.4.27",
     "babel-plugin-react-compiler": "1.0.0",
