@@ -2,4 +2,4 @@ name = "yuzeyingshi"
 compatibility_date = "2024-01-01"
 
 [build]
-command = "npx @cloudflare/next-on-pages build"
+command = "npm run build"
