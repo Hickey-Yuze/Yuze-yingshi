@@ -1,4 +1,3 @@
-export const runtime = 'edge';
 import { NextResponse } from "next/server";
 import { getDoubanActors } from "@/lib/doubanApi";
 import { unstable_cache } from "next/cache";
