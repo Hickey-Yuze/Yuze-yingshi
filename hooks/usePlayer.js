@@ -1,4 +1,4 @@
-import { useEffect, useRef, useEffectEvent } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import Artplayer from "artplayer";
 import Hls from "hls.js";
 import artplayerPluginDanmuku from "artplayer-plugin-danmuku";
@@ -17,11 +17,10 @@ export function usePlayer({
   const lastSaveTimeRef = useRef(0);
   const blockAdEnabledRef = useRef(useSettingsStore.getState().blockAdEnabled);
   const skipConfigRef = useRef(useSettingsStore.getState().skipConfig);
-  const isSwitchingEpisodeRef = useRef(false); // 标记是否正在切换剧集
-  const prevEpisodeIndexRef = useRef(currentEpisodeIndex); // 记录上一次的剧集索引
-  const CurrentEpisodeIndexEvent = useEffectEvent(() => {
-    return currentEpisodeIndex;
-  });
+  const isSwitchingEpisodeRef = useRef(false);
+  const prevEpisodeIndexRef = useRef(currentEpisodeIndex);
+  const currentEpisodeIndexRef = useRef(currentEpisodeIndex);
+  currentEpisodeIndexRef.current = currentEpisodeIndex;
 
   const savePlayProgress = () => {
     if (!artPlayerRef.current || !videoDetail) return;
@@ -58,8 +57,6 @@ export function usePlayer({
       console.error("保存播放进度失败:", err);
     }
   };
-  const savePlayProgressEvent = useEffectEvent(savePlayProgress);
-
   // 加载当前剧集的弹幕
   const loadDanmaku = () => {
     if (!videoDetail || !artPlayerRef.current) return;
@@ -86,8 +83,6 @@ export function usePlayer({
       console.log("弹幕加载已触发");
     }
   };
-  const loadDanmakuEvent = useEffectEvent(loadDanmaku);
-
   const switchToEpisode = () => {
     if (!videoDetail || !artPlayerRef.current) return;
 
@@ -145,8 +140,6 @@ export function usePlayer({
     });
   };
 
-  const switchToEpisodeEvent = useEffectEvent(switchToEpisode);
-
   useEffect(() => {
     if (!videoDetail || !artRef.current || artPlayerRef.current) {
       return;
@@ -155,7 +148,7 @@ export function usePlayer({
 
     try {
       console.log("重新初始化播放器了！");
-      const realtimeCurrentEpisodeIndex = CurrentEpisodeIndexEvent();
+      const realtimeCurrentEpisodeIndex = currentEpisodeIndexRef.current;
       console.log("realtimeCurrentEpisodeIndex", realtimeCurrentEpisodeIndex);
       const currentUrl =
         videoDetail?.episodes?.[realtimeCurrentEpisodeIndex] || "";
@@ -301,7 +294,7 @@ export function usePlayer({
               if (artPlayerRef.current) {
                 if (newVal) {
                   // 开启弹幕：加载弹幕并显示弹幕层
-                  loadDanmakuEvent();
+                  loadDanmaku();
                   artPlayerRef.current.plugins.artplayerPluginDanmuku.show();
                   artPlayerRef.current.notice.show = "弹幕已开启";
                 } else {
@@ -422,7 +415,7 @@ export function usePlayer({
             tooltip: "下一集",
             click: () => {
               // 每次点击时获取最新的 episodeIndex
-              const currentIdx = CurrentEpisodeIndexEvent();
+              const currentIdx = currentEpisodeIndexRef.current;
               if (
                 videoDetail &&
                 videoDetail.episodes &&
@@ -472,7 +465,7 @@ export function usePlayer({
         // 自动保存数据
         const now = Date.now();
         if (now - lastSaveTimeRef.current > 5000) {
-          savePlayProgressEvent();
+          savePlayProgress();
           lastSaveTimeRef.current = now;
         }
 
@@ -497,7 +490,7 @@ export function usePlayer({
               currentTime > duration + skipConfig.outro_time
             ) {
               artPlayerRef.current.notice.show = `Skipped outro (${formatTime(-skipConfig.outro_time)})`;
-              const currentIdx = CurrentEpisodeIndexEvent();
+              const currentIdx = currentEpisodeIndexRef.current;
               if (
                 videoDetail &&
                 videoDetail.episodes &&
@@ -513,11 +506,11 @@ export function usePlayer({
       });
 
       artPlayerRef.current.on("pause", () => {
-        savePlayProgressEvent();
+        savePlayProgress();
       });
 
       artPlayerRef.current.on("video:ended", () => {
-        const currentIdx = CurrentEpisodeIndexEvent();
+        const currentIdx = currentEpisodeIndexRef.current;
         if (
           videoDetail &&
           videoDetail.episodes &&
@@ -560,7 +553,7 @@ export function usePlayer({
       artPlayerRef.current &&
       prevEpisodeIndexRef.current !== currentEpisodeIndex
     ) {
-      switchToEpisodeEvent(currentEpisodeIndex);
+      switchToEpisode();
     }
     // 更新上一次的索引
     prevEpisodeIndexRef.current = currentEpisodeIndex;
@@ -572,7 +565,7 @@ export function usePlayer({
         return;
 
       // 每次按键时获取最新的 episodeIndex
-      const currentIdx = CurrentEpisodeIndexEvent();
+      const currentIdx = currentEpisodeIndexRef.current;
 
       if (e.altKey && e.key === "ArrowLeft") {
         if (currentIdx > 0) {
@@ -649,9 +642,9 @@ export function usePlayer({
   }, [videoDetail, setCurrentEpisodeIndex]);
 
   useEffect(() => {
-    window.addEventListener("beforeunload", savePlayProgressEvent);
+    window.addEventListener("beforeunload", savePlayProgress);
     return () => {
-      window.removeEventListener("beforeunload", savePlayProgressEvent);
+      window.removeEventListener("beforeunload", savePlayProgress);
     };
   }, []);
 

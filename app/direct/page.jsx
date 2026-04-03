@@ -107,7 +107,7 @@ function DirectPlayerContent() {
             <div className="text-sm font-medium text-slate-900 dark:text-white truncate">
               {title || "直链播放"}
             </div>
-            <span className="bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 px-2 py-0.5 rounded text-xs shrink-0 ml-2">
+            <span className="bg-green-600 text-white px-2 py-0.5 rounded text-xs shrink-0 ml-2">
               直链
             </span>
           </div>

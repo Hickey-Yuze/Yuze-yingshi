@@ -1,4 +1,4 @@
-import { useEffect, useRef, useEffectEvent, useCallback } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import Artplayer from "artplayer";
 import Hls from "hls.js";
 import artplayerPluginDanmuku from "artplayer-plugin-danmuku";
@@ -94,8 +94,6 @@ export function usePlayerDirect({
     }
   };
 
-  const savePlayProgressEvent = useEffectEvent(savePlayProgress);
-
   // 加载弹幕
   const loadDanmaku = useCallback(() => {
     if (!artPlayerRef.current || !searchEpisodeId) return;
@@ -111,8 +109,6 @@ export function usePlayerDirect({
       console.log("弹幕加载已触发, episodeId:", searchEpisodeId);
     }
   }, [searchEpisodeId]);
-
-  const loadDanmakuEvent = useEffectEvent(loadDanmaku);
 
   useEffect(() => {
     loadDanmaku();
@@ -301,13 +297,13 @@ export function usePlayerDirect({
       artPlayerRef.current.on("video:timeupdate", () => {
         const now = Date.now();
         if (now - lastSaveTimeRef.current > 5000) {
-          savePlayProgressEvent();
+          savePlayProgress();
           lastSaveTimeRef.current = now;
         }
       });
 
       artPlayerRef.current.on("pause", () => {
-        savePlayProgressEvent();
+        savePlayProgress();
       });
 
       artPlayerRef.current.on("error", (err) => {
@@ -398,9 +394,9 @@ export function usePlayerDirect({
   }, []);
 
   useEffect(() => {
-    window.addEventListener("beforeunload", savePlayProgressEvent);
+    window.addEventListener("beforeunload", savePlayProgress);
     return () => {
-      window.removeEventListener("beforeunload", savePlayProgressEvent);
+      window.removeEventListener("beforeunload", savePlayProgress);
     };
   }, []);
 
