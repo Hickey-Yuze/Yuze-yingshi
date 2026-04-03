@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npx @cloudflare/next-on-pages --build",
+    "build": "next build",
     "deploy": "npx @cloudflare/next-on-pages"
   },
   "dependencies": {
