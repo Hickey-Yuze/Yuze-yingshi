@@ -43,10 +43,9 @@ export function Navbar() {
 
   // 设置密码状态
   const settingsPassword = useSettingsStore((state) => state.settingsPassword);
-  const isSettingsUnlocked = useSettingsStore((state) => state.isSettingsUnlocked);
 
   const handleSettingsClick = (e) => {
-    if (settingsPassword && !isSettingsUnlocked) {
+    if (settingsPassword) {
       e.preventDefault();
       const password = prompt("请输入设置密码:");
       const verifyPassword = useSettingsStore.getState().verifyPassword;

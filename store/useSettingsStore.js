@@ -12,7 +12,6 @@ export const useSettingsStore = create(
 
       // 密码保护
       settingsPassword: "",
-      isSettingsUnlocked: false,
 
       // 设置密码
       setSettingsPassword: (password) => set({settingsPassword: password}),
@@ -21,7 +20,6 @@ export const useSettingsStore = create(
       verifyPassword: (password) => {
         const state = get();
         if (state.settingsPassword === "" || state.settingsPassword === password) {
-          set({isSettingsUnlocked: true});
           return true;
         }
         return false;

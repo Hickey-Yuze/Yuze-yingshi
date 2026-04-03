@@ -211,7 +211,6 @@ export default function Settings() {
     setDoubanImageProxy,
     settingsPassword,
     setSettingsPassword,
-    lockSettings,
   } = useSettingsStore();
 
   const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -708,7 +707,6 @@ export default function Settings() {
               setSettingsPassword("");
               setShowPasswordModal(false);
               setPasswordForm({ newPassword: "", confirmPassword: "" });
-              lockSettings();
               alert("密码已清除");
             }}
             className="text-red-600 text-sm hover:underline"
