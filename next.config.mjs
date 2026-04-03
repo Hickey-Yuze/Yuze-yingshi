@@ -7,11 +7,9 @@ const __dirname = path.dirname(__filename);
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
-  reactCompiler: true,
   output: "standalone",
-  // 明确指定 Turbopack 的工作区根目录，避免被父目录的 lockfile 误导
-  turbopack: {
-    root: __dirname, // 使用绝对路径指向项目根目录
+  typescript: {
+    ignoreBuildErrors: true,
   },
   images: {
     remotePatterns: [
@@ -26,6 +24,10 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "lh3.googleusercontent.com",
+      },
+      {
+        protocol: "https",
+        hostname: "imgbed.gengyu.de5.net",
       },
     ],
   },

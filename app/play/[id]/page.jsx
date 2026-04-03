@@ -100,7 +100,7 @@ export default function PlayerPage() {
             </div>
             <div className="flex items-center gap-2">
               <div className="text-sm font-medium text-slate-900 dark:text-white truncate max-w-[150px]">{videoDetail.title}</div>
-              <span className="bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 px-2 py-0.5 rounded text-xs">{videoDetail.source_name || source}</span>
+              <span className="bg-green-100 dark:bg-amber-900/30 text-white dark:text-amber-400 px-2 py-0.5 rounded text-xs">{videoDetail.source_name || source}</span>
             </div>
           </div>
         </div>
@@ -125,7 +125,7 @@ export default function PlayerPage() {
               <Image
                 alt={`${videoDetail.title} Poster`}
                 className="object-cover transition-transform duration-700 group-hover:scale-110"
-                src={videoDetail.poster}
+                src={videoDetail.poster || "/placeholder.png"}
                 fill
                 sizes="(max-width: 768px) 100vw, 300px"
                 unoptimized
@@ -150,7 +150,7 @@ export default function PlayerPage() {
                     </span>
                   )}
                   <span>更新至 {videoDetail.episodes?.length || 1} 集</span>
-                  <span className="bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 px-2 py-0.5 rounded text-xs">{videoDetail.source_name || source}</span>
+<span className="bg-green-600 dark:bg-green-800 text-white px-2 py-0.5 rounded text-xs">{videoDetail.source_name || source}</span>
                 </div>
               </div>
 

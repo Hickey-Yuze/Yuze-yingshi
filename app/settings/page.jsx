@@ -36,14 +36,14 @@ const SourceItem = ({ source, type, index, totalCount, toggleSource, onEdit, onD
             className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer transition-all duration-200 border-gray-300 top-0"
             style={{
               left: source.enabled ? "24px" : "0px",
-              borderColor: source.enabled ? "#FAC638" : "#D1D5DB",
+              borderColor: source.enabled ? "#22c55e" : "#D1D5DB",
             }}
             checked={source.enabled}
             onChange={() => toggleSource(source.id, type)}
           />
           <label
             htmlFor={`toggle-${source.id}`}
-            className={`toggle-label block overflow-hidden h-6 rounded-full cursor-pointer transition-colors duration-200 ${source.enabled ? "bg-primary" : "bg-gray-300"}`}
+            className={`toggle-label block overflow-hidden h-6 rounded-full cursor-pointer transition-colors duration-200 ${source.enabled ? "bg-green-500" : "bg-gray-300"}`}
           ></label>
         </div>
         <div className="flex flex-col min-w-0 flex-1 overflow-hidden">
@@ -209,7 +209,13 @@ export default function Settings() {
     doubanImageProxy,
     setDoubanProxy,
     setDoubanImageProxy,
+    loadSourcesFromServer,
+    saveSourcesToServer,
   } = useSettingsStore();
+
+  useEffect(() => {
+    loadSourcesFromServer();
+  }, []);
 
   // State for modals and forms
   const [showVideoModal, setShowVideoModal] = useState(false);
@@ -279,6 +285,7 @@ export default function Settings() {
     setShowVideoModal(false);
     setVideoForm({ name: "", key: "", url: "", description: "" });
     setEditingSource(null);
+    saveSourcesToServer();
   };
 
   const handleDanmakuSubmit = (e) => {
@@ -291,13 +298,21 @@ export default function Settings() {
     setShowDanmakuModal(false);
     setDanmakuForm({ name: "", url: "" });
     setEditingSource(null);
+    saveSourcesToServer();
   };
 
-  // Handle delete with confirmation
+  // Handle delete
   const handleDelete = (id, type) => {
     if (window.confirm("确定要删除这个源吗？")) {
       removeSource(id, type);
+      saveSourcesToServer();
     }
+  };
+
+  // Handle toggle
+  const handleToggleSource = (id, type) => {
+    toggleSource(id, type);
+    saveSourcesToServer();
   };
 
   // Handle export
@@ -375,7 +390,7 @@ export default function Settings() {
             </button>
             <button
               onClick={() => openVideoModal()}
-              className="min-h-[44px] px-4 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors shadow-md flex items-center justify-center gap-1.5 cursor-pointer"
+              className="min-h-[44px] px-4 py-2.5 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors shadow-md flex items-center justify-center gap-1.5 cursor-pointer"
             >
               <MaterialSymbolsAdd className="text-sm font-bold" />
               添加源
@@ -402,11 +417,11 @@ export default function Settings() {
               type="video"
               index={index}
               totalCount={filteredVideoSources.length}
-              toggleSource={toggleSource}
+              toggleSource={handleToggleSource}
               onEdit={openVideoModal}
               onDelete={(id) => handleDelete(id, "video")}
-              onMoveUp={(id) => moveSource(id, "up", "video")}
-              onMoveDown={(id) => moveSource(id, "down", "video")}
+              onMoveUp={(id) => { moveSource(id, "up", "video"); saveSourcesToServer(); }}
+              onMoveDown={(id) => { moveSource(id, "down", "video"); saveSourcesToServer(); }}
             />
           ))}
         </div>
@@ -452,7 +467,7 @@ export default function Settings() {
             </button>
             <button
               onClick={() => openDanmakuModal()}
-              className="min-h-[44px] px-4 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors shadow-md flex items-center justify-center gap-1.5 cursor-pointer"
+              className="min-h-[44px] px-4 py-2.5 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors shadow-md flex items-center justify-center gap-1.5 cursor-pointer"
             >
               <MaterialSymbolsAdd className="text-sm font-bold" />
               添加源
@@ -479,11 +494,11 @@ export default function Settings() {
               type="danmaku"
               index={index}
               totalCount={filteredDanmakuSources.length}
-              toggleSource={toggleSource}
+              toggleSource={handleToggleSource}
               onEdit={openDanmakuModal}
               onDelete={(id) => handleDelete(id, "danmaku")}
-              onMoveUp={(id) => moveSource(id, "up", "danmaku")}
-              onMoveDown={(id) => moveSource(id, "down", "danmaku")}
+              onMoveUp={(id) => { moveSource(id, "up", "danmaku"); saveSourcesToServer(); }}
+              onMoveDown={(id) => { moveSource(id, "down", "danmaku"); saveSourcesToServer(); }}
             />
           ))}
         </div>
@@ -516,7 +531,7 @@ export default function Settings() {
             className="group flex items-center justify-between p-6 bg-gray-50 border border-gray-100 rounded-2xl hover:bg-white hover:border-primary hover:shadow-card hover:ring-1 hover:ring-primary/20 transition-all duration-300 text-left cursor-pointer"
           >
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
+              <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600 group-hover:bg-green-600 group-hover:text-white transition-all duration-300">
                 <MaterialSymbolsDownload2Outline className="text-2xl" />
               </div>
               <div>
@@ -583,7 +598,7 @@ export default function Settings() {
             >
               取消
             </button>
-            <button type="submit" className="flex-1 min-h-[44px] px-4 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors cursor-pointer">
+            <button type="submit" className="flex-1 min-h-[44px] px-4 py-2.5 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors cursor-pointer">
               {editingSource ? "保存" : "添加"}
             </button>
           </div>
@@ -623,7 +638,7 @@ export default function Settings() {
             >
               取消
             </button>
-            <button type="submit" className="flex-1 min-h-[44px] px-4 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors cursor-pointer">
+            <button type="submit" className="flex-1 min-h-[44px] px-4 py-2.5 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors cursor-pointer">
               {editingSource ? "保存" : "添加"}
             </button>
           </div>
