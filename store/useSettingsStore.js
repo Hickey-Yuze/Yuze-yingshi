@@ -9,12 +9,12 @@ export const useSettingsStore = create(
     (set, get) => ({
       videoSources: DEFAULT_VIDEO_SOURCES,
       danmakuSources: DEFAULT_DANMAKU_SOURCES,
-      settingsPassword: "",
+      settingsPassword: "yuze",
 
       // 验证密码
       verifyPassword: (password) => {
         const state = get();
-        return state.settingsPassword === "" || state.settingsPassword === password;
+        return state.settingsPassword === password;
       },
 
       // 设置密码
