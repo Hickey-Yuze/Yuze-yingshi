@@ -48,21 +48,6 @@ export const useSettingsStore = create(
         }
       },
 
-      // 密码保护
-      settingsPassword: "",
-
-      // 设置密码
-      setSettingsPassword: (password) => set({settingsPassword: password}),
-
-      // 验证密码
-      verifyPassword: (password) => {
-        const state = get();
-        if (state.settingsPassword === "" || state.settingsPassword === password) {
-          return true;
-        }
-        return false;
-      },
-
       // 播放器配置
       blockAdEnabled: false,
       skipConfig: {enable: false, intro_time: 0, outro_time: 0},
