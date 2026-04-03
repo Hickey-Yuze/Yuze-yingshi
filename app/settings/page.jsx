@@ -211,7 +211,13 @@ export default function Settings() {
     setDoubanImageProxy,
     settingsPassword,
     setSettingsPassword,
+    loadSourcesFromServer,
+    saveSourcesToServer,
   } = useSettingsStore();
+
+  useEffect(() => {
+    loadSourcesFromServer();
+  }, []);
 
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [passwordForm, setPasswordForm] = useState({ newPassword: "", confirmPassword: "" });
@@ -284,6 +290,7 @@ export default function Settings() {
     setShowVideoModal(false);
     setVideoForm({ name: "", key: "", url: "", description: "" });
     setEditingSource(null);
+    saveSourcesToServer();
   };
 
   const handleDanmakuSubmit = (e) => {
@@ -296,13 +303,21 @@ export default function Settings() {
     setShowDanmakuModal(false);
     setDanmakuForm({ name: "", url: "" });
     setEditingSource(null);
+    saveSourcesToServer();
   };
 
-  // Handle delete with confirmation
+  // Handle delete
   const handleDelete = (id, type) => {
     if (window.confirm("确定要删除这个源吗？")) {
       removeSource(id, type);
+      saveSourcesToServer();
     }
+  };
+
+  // Handle toggle
+  const handleToggleSource = (id, type) => {
+    toggleSource(id, type);
+    saveSourcesToServer();
   };
 
   // Handle export
@@ -407,11 +422,11 @@ export default function Settings() {
               type="video"
               index={index}
               totalCount={filteredVideoSources.length}
-              toggleSource={toggleSource}
+              toggleSource={handleToggleSource}
               onEdit={openVideoModal}
               onDelete={(id) => handleDelete(id, "video")}
-              onMoveUp={(id) => moveSource(id, "up", "video")}
-              onMoveDown={(id) => moveSource(id, "down", "video")}
+              onMoveUp={(id) => { moveSource(id, "up", "video"); saveSourcesToServer(); }}
+              onMoveDown={(id) => { moveSource(id, "down", "video"); saveSourcesToServer(); }}
             />
           ))}
         </div>
@@ -506,11 +521,11 @@ export default function Settings() {
               type="danmaku"
               index={index}
               totalCount={filteredDanmakuSources.length}
-              toggleSource={toggleSource}
+              toggleSource={handleToggleSource}
               onEdit={openDanmakuModal}
               onDelete={(id) => handleDelete(id, "danmaku")}
-              onMoveUp={(id) => moveSource(id, "up", "danmaku")}
-              onMoveDown={(id) => moveSource(id, "down", "danmaku")}
+              onMoveUp={(id) => { moveSource(id, "up", "danmaku"); saveSourcesToServer(); }}
+              onMoveDown={(id) => { moveSource(id, "down", "danmaku"); saveSourcesToServer(); }}
             />
           ))}
         </div>
