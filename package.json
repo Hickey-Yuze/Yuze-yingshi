@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npx @cloudflare/next-on-pages --build --skip-build-kv-datasets",
+    "build": "npx @cloudflare/next-on-pages --build",
     "deploy": "npx @cloudflare/next-on-pages"
   },
   "dependencies": {
