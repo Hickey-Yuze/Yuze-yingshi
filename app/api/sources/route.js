@@ -7,13 +7,22 @@ const redis = new Redis({
 
 export async function POST(request) {
   try {
-    const { videoSources, danmakuSources } = await request.json();
+    const body = await request.json();
+    const { videoSources, danmakuSources, settingsPassword } = body;
     
-    await redis.hset("sources", {
-      videoSources: JSON.stringify(videoSources),
-      danmakuSources: JSON.stringify(danmakuSources),
-      updatedAt: new Date().toISOString()
-    });
+    const data = {};
+    if (videoSources !== undefined) {
+      data.videoSources = JSON.stringify(videoSources);
+    }
+    if (danmakuSources !== undefined) {
+      data.danmakuSources = JSON.stringify(danmakuSources);
+    }
+    if (settingsPassword !== undefined) {
+      data.settingsPassword = settingsPassword;
+    }
+    data.updatedAt = new Date().toISOString();
+    
+    await redis.hset("sources", data);
     
     return Response.json({ success: true });
   } catch (error) {
@@ -26,12 +35,13 @@ export async function GET() {
     const data = await redis.hgetall("sources");
     
     if (!data) {
-      return Response.json({ videoSources: [], danmakuSources: [] });
+      return Response.json({ videoSources: [], danmakuSources: [], settingsPassword: "" });
     }
     
     return Response.json({
       videoSources: data.videoSources ? JSON.parse(data.videoSources) : [],
-      danmakuSources: data.danmakuSources ? JSON.parse(data.danmakuSources) : []
+      danmakuSources: data.danmakuSources ? JSON.parse(data.danmakuSources) : [],
+      settingsPassword: data.settingsPassword || ""
     });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });

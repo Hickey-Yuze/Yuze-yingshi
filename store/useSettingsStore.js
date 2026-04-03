@@ -9,12 +9,22 @@ export const useSettingsStore = create(
     (set, get) => ({
       videoSources: DEFAULT_VIDEO_SOURCES,
       danmakuSources: DEFAULT_DANMAKU_SOURCES,
+      settingsPassword: "",
 
       // 验证密码
-      verifyPassword: (password) => password === "yuze",
+      verifyPassword: (password) => {
+        const state = get();
+        return state.settingsPassword === "" || state.settingsPassword === password;
+      },
 
-      // 从服务器加载源
-      loadSourcesFromServer: async () => {
+      // 设置密码
+      setSettingsPassword: (password) => {
+        set({ settingsPassword: password });
+        get().saveSettingsToServer();
+      },
+
+      // 从服务器加载
+      loadSettingsFromServer: async () => {
         try {
           const response = await fetch("/api/sources");
           if (response.ok) {
@@ -25,14 +35,17 @@ export const useSettingsStore = create(
             if (data.danmakuSources && data.danmakuSources.length > 0) {
               set({ danmakuSources: data.danmakuSources });
             }
+            if (data.settingsPassword) {
+              set({ settingsPassword: data.settingsPassword });
+            }
           }
         } catch (e) {
-          console.error("加载源失败:", e);
+          console.error("加载设置失败:", e);
         }
       },
 
-      // 保存源到服务器
-      saveSourcesToServer: async () => {
+      // 保存到服务器
+      saveSettingsToServer: async () => {
         try {
           const state = get();
           await fetch("/api/sources", {
@@ -41,11 +54,20 @@ export const useSettingsStore = create(
             body: JSON.stringify({
               videoSources: state.videoSources,
               danmakuSources: state.danmakuSources,
+              settingsPassword: state.settingsPassword,
             }),
           });
         } catch (e) {
-          console.error("保存源失败:", e);
+          console.error("保存设置失败:", e);
         }
+      },
+
+      // 兼容旧方法
+      loadSourcesFromServer: async () => {
+        get().loadSettingsFromServer();
+      },
+      saveSourcesToServer: async () => {
+        get().saveSettingsToServer();
       },
 
       // 播放器配置
