@@ -11,6 +11,9 @@ export function Footer() {
             <p className="text-gray-900 text-sm font-medium ">
               © 2026 Yuze-影视
             </p>
+            <p className="text-gray-500 text-sm font-medium text-center">
+              开源项目
+            </p>
           </div>
         </div>
         <div className="flex gap-6">

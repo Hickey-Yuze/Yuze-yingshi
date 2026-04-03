@@ -7,8 +7,8 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies
 node_modules
-node_modules/*
 dist
 dist-ssr
 *.local
@@ -21,12 +21,21 @@ dist-ssr
 *.suo
 *.ntvs*
 *.njsproj
-*.sln
 *.sw?
+
+# Next.js
 .next
 .next/*
+.env
 .env.local
-.agent/
+.env.production.local
 
+# Build output
+.vercel
+output
+.swc
+
+# Claude
 CLAUDE.md
 .claude
+.agent/

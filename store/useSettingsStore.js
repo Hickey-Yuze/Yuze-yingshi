@@ -10,42 +10,19 @@ export const useSettingsStore = create(
       videoSources: DEFAULT_VIDEO_SOURCES,
       danmakuSources: DEFAULT_DANMAKU_SOURCES,
 
+      // 密码保护
+      settingsPassword: "",
+
+      // 设置密码
+      setSettingsPassword: (password) => set({settingsPassword: password}),
+
       // 验证密码
-      verifyPassword: (password) => password === "yuze",
-
-      // 从服务器加载源
-      loadSourcesFromServer: async () => {
-        try {
-          const response = await fetch("/api/sources");
-          if (response.ok) {
-            const data = await response.json();
-            if (data.videoSources && data.videoSources.length > 0) {
-              set({ videoSources: data.videoSources });
-            }
-            if (data.danmakuSources && data.danmakuSources.length > 0) {
-              set({ danmakuSources: data.danmakuSources });
-            }
-          }
-        } catch (e) {
-          console.error("加载源失败:", e);
+      verifyPassword: (password) => {
+        const state = get();
+        if (state.settingsPassword === "" || state.settingsPassword === password) {
+          return true;
         }
-      },
-
-      // 保存源到服务器
-      saveSourcesToServer: async () => {
-        try {
-          const state = get();
-          await fetch("/api/sources", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              videoSources: state.videoSources,
-              danmakuSources: state.danmakuSources,
-            }),
-          });
-        } catch (e) {
-          console.error("保存源失败:", e);
-        }
+        return false;
       },
 
       // 播放器配置
