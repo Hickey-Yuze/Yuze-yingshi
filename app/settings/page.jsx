@@ -209,7 +209,18 @@ export default function Settings() {
     doubanImageProxy,
     setDoubanProxy,
     setDoubanImageProxy,
+    settingsPassword,
+    setSettingsPassword,
+    loadSourcesFromServer,
+    saveSourcesToServer,
   } = useSettingsStore();
+
+  useEffect(() => {
+    loadSourcesFromServer();
+  }, []);
+
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [passwordForm, setPasswordForm] = useState({ newPassword: "", confirmPassword: "" });
 
   // State for modals and forms
   const [showVideoModal, setShowVideoModal] = useState(false);
@@ -279,6 +290,7 @@ export default function Settings() {
     setShowVideoModal(false);
     setVideoForm({ name: "", key: "", url: "", description: "" });
     setEditingSource(null);
+    saveSourcesToServer();
   };
 
   const handleDanmakuSubmit = (e) => {
@@ -291,13 +303,21 @@ export default function Settings() {
     setShowDanmakuModal(false);
     setDanmakuForm({ name: "", url: "" });
     setEditingSource(null);
+    saveSourcesToServer();
   };
 
-  // Handle delete with confirmation
+  // Handle delete
   const handleDelete = (id, type) => {
     if (window.confirm("确定要删除这个源吗？")) {
       removeSource(id, type);
+      saveSourcesToServer();
     }
+  };
+
+  // Handle toggle
+  const handleToggleSource = (id, type) => {
+    toggleSource(id, type);
+    saveSourcesToServer();
   };
 
   // Handle export
@@ -402,13 +422,35 @@ export default function Settings() {
               type="video"
               index={index}
               totalCount={filteredVideoSources.length}
-              toggleSource={toggleSource}
+              toggleSource={handleToggleSource}
               onEdit={openVideoModal}
               onDelete={(id) => handleDelete(id, "video")}
-              onMoveUp={(id) => moveSource(id, "up", "video")}
-              onMoveDown={(id) => moveSource(id, "down", "video")}
+              onMoveUp={(id) => { moveSource(id, "up", "video"); saveSourcesToServer(); }}
+              onMoveDown={(id) => { moveSource(id, "down", "video"); saveSourcesToServer(); }}
             />
           ))}
+        </div>
+      </section>
+
+      {/* Password Configuration */}
+      <section className="bg-white rounded-2xl shadow-soft p-4 md:p-8 mt-8 border border-gray-100">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+          <div>
+            <h2 className="text-xl font-bold text-gray-900">密码保护</h2>
+            <p className="text-gray-500 mt-1">设置密码保护设置页面</p>
+          </div>
+        </div>
+        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+          <div>
+            <p className="font-medium text-gray-900">{settingsPassword ? "已设置密码" : "未设置密码"}</p>
+            <p className="text-sm text-gray-500">{settingsPassword ? "设置页面需要密码访问" : "点击设置密码可保护设置页面"}</p>
+          </div>
+          <button
+            onClick={() => setShowPasswordModal(true)}
+            className="min-h-[44px] px-4 py-2.5 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors shadow-md cursor-pointer"
+          >
+            {settingsPassword ? "修改密码" : "设置密码"}
+          </button>
         </div>
       </section>
 
@@ -479,11 +521,11 @@ export default function Settings() {
               type="danmaku"
               index={index}
               totalCount={filteredDanmakuSources.length}
-              toggleSource={toggleSource}
+              toggleSource={handleToggleSource}
               onEdit={openDanmakuModal}
               onDelete={(id) => handleDelete(id, "danmaku")}
-              onMoveUp={(id) => moveSource(id, "up", "danmaku")}
-              onMoveDown={(id) => moveSource(id, "down", "danmaku")}
+              onMoveUp={(id) => { moveSource(id, "up", "danmaku"); saveSourcesToServer(); }}
+              onMoveDown={(id) => { moveSource(id, "down", "danmaku"); saveSourcesToServer(); }}
             />
           ))}
         </div>
@@ -629,6 +671,78 @@ export default function Settings() {
           </div>
         </form>
       </Modal>
+
+    {/* Password Modal */}
+    <Modal isOpen={showPasswordModal} onClose={() => { setShowPasswordModal(false); setPasswordForm({ newPassword: "", confirmPassword: "" }); }} title={settingsPassword ? "修改密码" : "设置密码"}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+            alert("两次输入的密码不一致");
+            return;
+          }
+          setSettingsPassword(passwordForm.newPassword);
+          setShowPasswordModal(false);
+          setPasswordForm({ newPassword: "", confirmPassword: "" });
+          alert("密码设置成功");
+        }}
+        className="space-y-4"
+      >
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">新密码 *</label>
+          <input
+            type="password"
+            required
+            className="w-full px-3 py-2 border border-gray-200 rounded-lg"
+            placeholder="请输入密码"
+            value={passwordForm.newPassword}
+            onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">确认密码 *</label>
+          <input
+            type="password"
+            required
+            className="w-full px-3 py-2 border border-gray-200 rounded-lg"
+            placeholder="请再次输入密码"
+            value={passwordForm.confirmPassword}
+            onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
+          />
+        </div>
+        {settingsPassword && (
+          <button
+            type="button"
+            onClick={() => {
+              const password = prompt("请输入当前密码:");
+              if (password !== settingsPassword) {
+                alert("密码错误");
+                return;
+              }
+              setSettingsPassword("");
+              setShowPasswordModal(false);
+              setPasswordForm({ newPassword: "", confirmPassword: "" });
+              alert("密码已清除");
+            }}
+            className="text-red-600 text-sm hover:underline"
+          >
+            清除密码
+          </button>
+        )}
+        <div className="flex gap-3 pt-4">
+          <button
+            type="button"
+            onClick={() => { setShowPasswordModal(false); setPasswordForm({ newPassword: "", confirmPassword: "" }); }}
+            className="flex-1 min-h-[44px] px-4 py-2.5 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
+          >
+            取消
+          </button>
+          <button type="submit" className="flex-1 min-h-[44px] px-4 py-2.5 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors cursor-pointer">
+            保存
+          </button>
+        </div>
+      </form>
+    </Modal>
     </div>
   );
 }

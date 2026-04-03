@@ -41,7 +41,7 @@ export function Navbar() {
   const removeFavorite = useFavoritesStore((state) => state.removeFavorite);
   const clearFavorites = useFavoritesStore((state) => state.clearFavorites);
 
-  // 密码验证
+  // 设置密码状态
   const verifyPassword = useSettingsStore((state) => state.verifyPassword);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [passwordInput, setPasswordInput] = useState("");

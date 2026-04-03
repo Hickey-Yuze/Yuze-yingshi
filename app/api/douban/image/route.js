@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 import {NextResponse} from "next/server";
 import {DEFAULT_USER_AGENT} from "@/lib/user-agent";
 
