@@ -1,15 +1,10 @@
-import { Redis } from "@upstash/redis";
-
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN,
-});
+import { kv } from "@vercel/kv";
 
 export async function POST(request) {
   try {
     const { videoSources, danmakuSources } = await request.json();
     
-    await redis.hset("sources", {
+    await kv.hset("sources", {
       videoSources: JSON.stringify(videoSources),
       danmakuSources: JSON.stringify(danmakuSources),
       updatedAt: new Date().toISOString()
@@ -23,7 +18,7 @@ export async function POST(request) {
 
 export async function GET() {
   try {
-    const data = await redis.hgetall("sources");
+    const data = await kv.hgetall("sources");
     
     if (!data) {
       return Response.json({ videoSources: [], danmakuSources: [] });
