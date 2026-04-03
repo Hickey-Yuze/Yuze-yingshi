@@ -53,15 +53,29 @@ export async function GET() {
     let settingsPassword = "";
     
     try {
-      videoSources = data.videoSources ? JSON.parse(data.videoSources) : [];
+      console.log("data.videoSources 原始值:", data.videoSources, "类型:", typeof data.videoSources);
+      if (data.videoSources) {
+        if (typeof data.videoSources === 'string') {
+          videoSources = JSON.parse(data.videoSources);
+        } else {
+          videoSources = data.videoSources;
+        }
+      }
     } catch (e) {
-      console.error("解析 videoSources 失败:", e);
+      console.error("解析 videoSources 失败:", e, "原始值:", data.videoSources);
     }
     
     try {
-      danmakuSources = data.danmakuSources ? JSON.parse(data.danmakuSources) : [];
+      console.log("data.danmakuSources 原始值:", data.danmakuSources, "类型:", typeof data.danmakuSources);
+      if (data.danmakuSources) {
+        if (typeof data.danmakuSources === 'string') {
+          danmakuSources = JSON.parse(data.danmakuSources);
+        } else {
+          danmakuSources = data.danmakuSources;
+        }
+      }
     } catch (e) {
-      console.error("解析 danmakuSources 失败:", e);
+      console.error("解析 danmakuSources 失败:", e, "原始值:", data.danmakuSources);
     }
     
     try {
