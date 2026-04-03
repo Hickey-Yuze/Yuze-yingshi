@@ -21,8 +21,13 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: "NextTV - 影视无限",
-  description: "NextTV 影视播放平台",
+  title: "Yuze-影视 - 影视无限",
+  description: "Yuze-影视 播放平台",
+  icons: {
+    icon: [
+      { url: "https://imgbed.gengyu.de5.net/file/1772363076545_logo.jpg" },
+    ],
+  },
 };
 
 export default function RootLayout({ children }) {

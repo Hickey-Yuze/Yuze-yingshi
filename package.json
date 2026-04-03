@@ -6,24 +6,27 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "deploy": "npx @cloudflare/next-on-pages"
   },
   "dependencies": {
     "artplayer": "^5.4.0",
     "artplayer-plugin-danmuku": "^5.3.0",
     "hls.js": "^1.6.15",
-    "next": "16.2.1",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
+    "next": "15.5.2",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
     "zustand": "^5.0.12"
   },
   "devDependencies": {
+    "@cloudflare/next-on-pages": "^1.13.0",
     "@tailwindcss/postcss": "^4.2.2",
     "autoprefixer": "^10.4.27",
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9.39.4",
-    "eslint-config-next": "16.1.1",
+    "eslint-config-next": "15.5.2",
     "eslint-plugin-react-hooks": "^7.0.1",
+    "opennextjs-cloudflare": "^1.0.0",
     "postcss": "^8.5.8",
     "tailwindcss": "^4.2.2"
   },

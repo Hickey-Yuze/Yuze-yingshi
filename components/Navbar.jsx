@@ -132,17 +132,17 @@ export function Navbar() {
         >
           <div className="relative group-hover:scale-105 transition-transform duration-200">
             <Image
-              src="https://tncache1-f1.v3mh.com/image/2026/01/14/67727e3ade57c7062ef81a16d4f711a0.png"
-              alt="NextTV"
-              width={24}
-              height={24}
-              className="w-6 h-6 object-contain"
+              src="https://imgbed.gengyu.de5.net/file/1772363076545_logo.jpg"
+              alt="Yuze-影视"
+              width={32}
+              height={32}
+              className="w-8 h-8 object-contain rounded-full"
             />
           </div>
           <div className="flex flex-col justify-center h-full">
             <h1 className="text-xl font-extrabold leading-none tracking-tight">
-              <span className="text-gray-900">Next</span>
-              <span className="text-primary">TV</span>
+              <span className="text-gray-900">Yuze</span>
+              <span className="text-gray-900">-影视</span>
             </h1>
             <span className="text-[10px] text-gray-500 text-center font-medium tracking-wide group-hover:text-primary transition-colors">
               影视无限畅享
@@ -155,30 +155,6 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-3">
-          <Link
-            href="https://github.com/SeqCrafter/NextTV"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="GitHub"
-            className="flex items-center justify-center size-10 rounded-full hover:bg-gray-100 text-gray-500 hover:text-gray-900 transition-colors btn-press"
-          >
-            <SimpleIconsGithub
-              aria-hidden="true"
-              className="size-5"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            />
-          </Link>
-
-          {/* Direct Play Link */}
-          <Link
-            href="/direct-input"
-            aria-label="直链播放"
-            className={`flex items-center justify-center size-10 rounded-full hover:bg-gray-100 text-gray-500 hover:text-gray-900 transition-colors cursor-pointer btn-press ${pathname === "/direct-input" ? "bg-gray-100 text-gray-900" : ""}`}
-          >
-            <MaterialSymbolsDirectionsAltOutlineRounded className="text-2xl" />
-          </Link>
-
           {/* History Dropdown */}
           <div className="static md:relative" ref={dropdownRef}>
             <button
@@ -361,7 +337,8 @@ export function Navbar() {
           <Link
             href="/settings"
             aria-label="Settings"
-            className={`flex items-center justify-center size-10 rounded-full hover:bg-gray-100 text-gray-500 hover:text-gray-900 transition-colors cursor-pointer btn-press ${pathname === "/settings" ? "bg-gray-100 text-gray-900" : ""
+            suppressHydrationWarning
+            className={`flex items-center justify-center size-10 rounded-full hover:bg-gray-100 text-gray-500 hover:text-gray-900 transition-colors cursor-pointer btn-press ${pathname === "/settings" ? "bg-primary text-white" : ""
               }`}
           >
             <MaterialSymbolsSettingsOutlineRounded className="text-2xl" />
