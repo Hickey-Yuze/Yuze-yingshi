@@ -5,16 +5,13 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "eslint",
     "deploy": "npx @cloudflare/next-on-pages"
   },
   "dependencies": {
-    "@vercel/kv": "^3.0.0",
     "artplayer": "^5.4.0",
     "artplayer-plugin-danmuku": "^5.3.0",
     "hls.js": "^1.6.15",
-    "next": "15.5.2",
+    "next": "15.5.10",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "zustand": "^5.0.12"

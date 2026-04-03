@@ -41,23 +41,20 @@ export function Navbar() {
   const removeFavorite = useFavoritesStore((state) => state.removeFavorite);
   const clearFavorites = useFavoritesStore((state) => state.clearFavorites);
 
-  // 密码验证
-  const verifyPassword = useSettingsStore((state) => state.verifyPassword);
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
-  const [passwordInput, setPasswordInput] = useState("");
+  // 设置密码状态
+  const settingsPassword = useSettingsStore((state) => state.settingsPassword);
 
-  const handleSettingsClick = () => {
-    setPasswordInput("");
-    setShowPasswordModal(true);
-  };
-
-  const handlePasswordSubmit = () => {
-    if (verifyPassword(passwordInput)) {
-      setShowPasswordModal(false);
-      router.push("/settings");
-    } else {
-      alert("密码错误");
+  const handleSettingsClick = (e) => {
+    if (settingsPassword) {
+      e.preventDefault();
+      const password = prompt("请输入设置密码:");
+      const verifyPassword = useSettingsStore.getState().verifyPassword;
+      if (!verifyPassword(password)) {
+        alert("密码错误");
+        return;
+      }
     }
+    router.push("/settings");
   };
 
   // 点击外部关闭下拉菜单
@@ -365,38 +362,6 @@ export function Navbar() {
           </button>
         </div>
       </header>
-
-      {/* Password Modal */}
-      {showPasswordModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowPasswordModal(false)}>
-          <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6" onClick={(e) => e.stopPropagation()}>
-            <h3 className="text-xl font-bold text-gray-900 mb-4">请输入设置密码</h3>
-            <input
-              type="password"
-              value={passwordInput}
-              onChange={(e) => setPasswordInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handlePasswordSubmit()}
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl mb-4 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
-              placeholder="请输入密码"
-              autoFocus
-            />
-            <div className="flex gap-3">
-              <button
-                onClick={() => setShowPasswordModal(false)}
-                className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-              >
-                取消
-              </button>
-              <button
-                onClick={handlePasswordSubmit}
-                className="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors"
-              >
-                确认
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
