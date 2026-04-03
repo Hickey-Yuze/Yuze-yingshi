@@ -120,7 +120,6 @@ export function usePlayer({
     const hasEnabledDanmaku = danmakuSources.some((s) => s.enabled);
     if (hasEnabledDanmaku) {
       const isMovie = videoDetail.episodes?.length === 1;
-      const currentUrl = videoDetail.episodes?.[currentEpisodeIndex];
       artPlayerRef.current.plugins.artplayerPluginDanmuku.config({
         danmuku: createDanmakuLoader(
           danmakuSources,
@@ -154,15 +153,13 @@ export function usePlayer({
       console.log("重新初始化播放器了！");
       const realtimeCurrentEpisodeIndex = currentEpisodeIndexRef.current;
       console.log("realtimeCurrentEpisodeIndex", realtimeCurrentEpisodeIndex);
-      const currentUrl =
-        videoDetail?.episodes?.[realtimeCurrentEpisodeIndex] || "";
+      const currentUrl = videoDetail.episodes?.[realtimeCurrentEpisodeIndex];
       const currentTitle =
         videoDetail?.episodes_titles?.[realtimeCurrentEpisodeIndex] ||
         `第${realtimeCurrentEpisodeIndex + 1}集`;
 
       const { danmakuSources } = useSettingsStore.getState();
       const hasEnabledDanmaku = danmakuSources.some((s) => s.enabled);
-      const currentUrl = videoDetail.episodes?.[realtimeCurrentEpisodeIndex];
 
       // 根据是否有启用的弹幕源决定是否加载弹幕
       const danmakuLoader = hasEnabledDanmaku
