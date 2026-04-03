@@ -4,9 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint",
+    "build": "npx @cloudflare/next-on-pages --build --skip-build-kv-datasets",
     "deploy": "npx @cloudflare/next-on-pages"
   },
   "dependencies": {
