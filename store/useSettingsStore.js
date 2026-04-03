@@ -35,7 +35,7 @@ export const useSettingsStore = create(
             if (data.danmakuSources && data.danmakuSources.length > 0) {
               set({ danmakuSources: data.danmakuSources });
             }
-            if (data.settingsPassword) {
+            if (data.settingsPassword !== undefined) {
               set({ settingsPassword: data.settingsPassword });
             }
           }
@@ -48,7 +48,12 @@ export const useSettingsStore = create(
       saveSettingsToServer: async () => {
         try {
           const state = get();
-          await fetch("/api/sources", {
+          console.log("保存设置到服务器:", {
+            videoSources: state.videoSources.length,
+            danmakuSources: state.danmakuSources.length,
+            settingsPassword: state.settingsPassword
+          });
+          const response = await fetch("/api/sources", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -57,6 +62,8 @@ export const useSettingsStore = create(
               settingsPassword: state.settingsPassword,
             }),
           });
+          const result = await response.json();
+          console.log("保存结果:", result);
         } catch (e) {
           console.error("保存设置失败:", e);
         }
