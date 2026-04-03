@@ -87,81 +87,28 @@ const SourceItem = ({ source, type, index, totalCount, toggleSource, onEdit, onD
           <MaterialSymbolsDeleteOutlineRounded className="text-[18px] md:text-[20px]" />
         </button>
       </div>
-      {/* Password Modal */}
-      <Modal isOpen={showPasswordModal} onClose={() => { setShowPasswordModal(false); setPasswordForm({ newPassword: "", confirmPassword: "" }); }} title={settingsPassword ? "修改密码" : "设置密码"}>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-              alert("两次输入的密码不一致");
-              return;
-            }
-            setSettingsPassword(passwordForm.newPassword);
-            setShowPasswordModal(false);
-            setPasswordForm({ newPassword: "", confirmPassword: "" });
-            alert("密码设置成功");
-          }}
-          className="space-y-4"
-        >
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">新密码 *</label>
-            <input
-              type="password"
-              required
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg"
-              placeholder="请输入密码"
-              value={passwordForm.newPassword}
-              onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">确认密码 *</label>
-            <input
-              type="password"
-              required
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg"
-              placeholder="请再次输入密码"
-              value={passwordForm.confirmPassword}
-              onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
-            />
-          </div>
-          {settingsPassword && (
-            <button
-              type="button"
-              onClick={() => {
-                const password = prompt("请输入当前密码:");
-                if (password !== settingsPassword) {
-                  alert("密码错误");
-                  return;
-                }
-                setSettingsPassword("");
-                setShowPasswordModal(false);
-                setPasswordForm({ newPassword: "", confirmPassword: "" });
-                lockSettings();
-                alert("密码已清除");
-              }}
-              className="text-red-600 text-sm hover:underline"
-            >
-              清除密码
-            </button>
-          )}
-          <div className="flex gap-3 pt-4">
-            <button
-              type="button"
-              onClick={() => { setShowPasswordModal(false); setPasswordForm({ newPassword: "", confirmPassword: "" }); }}
-              className="flex-1 min-h-[44px] px-4 py-2.5 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
-            >
-              取消
-            </button>
-            <button type="submit" className="flex-1 min-h-[44px] px-4 py-2.5 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors cursor-pointer">
-              保存
-            </button>
-          </div>
-        </form>
-      </Modal>
     </div>
   );
-}
+};
+
+const Modal = ({ isOpen, onClose, title, children }) => {
+  const [shouldRender, setShouldRender] = useState(isOpen);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  useEffect(() => {
+    const timers = [];
+
+    if (isOpen) {
+      // 使用 setTimeout 避免同步 setState
+      timers.push(setTimeout(() => setShouldRender(true), 0));
+      // 延迟一帧后开始动画
+      timers.push(setTimeout(() => setIsAnimating(true), 20));
+    } else {
+      // 先开始退出动画
+      timers.push(setTimeout(() => setIsAnimating(false), 0));
+      // 等待动画完成后卸载
+      timers.push(setTimeout(() => setShouldRender(false), 300));
+    }
 
     return () => timers.forEach(clearTimeout);
   }, [isOpen]);
@@ -710,6 +657,79 @@ export default function Settings() {
           </div>
         </form>
       </Modal>
+
+    {/* Password Modal */}
+    <Modal isOpen={showPasswordModal} onClose={() => { setShowPasswordModal(false); setPasswordForm({ newPassword: "", confirmPassword: "" }); }} title={settingsPassword ? "修改密码" : "设置密码"}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+            alert("两次输入的密码不一致");
+            return;
+          }
+          setSettingsPassword(passwordForm.newPassword);
+          setShowPasswordModal(false);
+          setPasswordForm({ newPassword: "", confirmPassword: "" });
+          alert("密码设置成功");
+        }}
+        className="space-y-4"
+      >
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">新密码 *</label>
+          <input
+            type="password"
+            required
+            className="w-full px-3 py-2 border border-gray-200 rounded-lg"
+            placeholder="请输入密码"
+            value={passwordForm.newPassword}
+            onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">确认密码 *</label>
+          <input
+            type="password"
+            required
+            className="w-full px-3 py-2 border border-gray-200 rounded-lg"
+            placeholder="请再次输入密码"
+            value={passwordForm.confirmPassword}
+            onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
+          />
+        </div>
+        {settingsPassword && (
+          <button
+            type="button"
+            onClick={() => {
+              const password = prompt("请输入当前密码:");
+              if (password !== settingsPassword) {
+                alert("密码错误");
+                return;
+              }
+              setSettingsPassword("");
+              setShowPasswordModal(false);
+              setPasswordForm({ newPassword: "", confirmPassword: "" });
+              lockSettings();
+              alert("密码已清除");
+            }}
+            className="text-red-600 text-sm hover:underline"
+          >
+            清除密码
+          </button>
+        )}
+        <div className="flex gap-3 pt-4">
+          <button
+            type="button"
+            onClick={() => { setShowPasswordModal(false); setPasswordForm({ newPassword: "", confirmPassword: "" }); }}
+            className="flex-1 min-h-[44px] px-4 py-2.5 text-sm font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
+          >
+            取消
+          </button>
+          <button type="submit" className="flex-1 min-h-[44px] px-4 py-2.5 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors cursor-pointer">
+            保存
+          </button>
+        </div>
+      </form>
+    </Modal>
     </div>
   );
 }
