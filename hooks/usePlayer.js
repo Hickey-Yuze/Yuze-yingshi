@@ -70,6 +70,7 @@ export function usePlayer({
 
     if (hasEnabledDanmaku) {
       const isMovie = videoDetail.episodes?.length === 1;
+      const currentUrl = videoDetail.episodes?.[currentEpisodeIndex];
       artPlayerRef.current.plugins.artplayerPluginDanmuku.config({
         danmuku: createDanmakuLoader(
           danmakuSources,
@@ -77,6 +78,7 @@ export function usePlayer({
           currentTitle,
           currentEpisodeIndex,
           isMovie,
+          currentUrl,
         ),
       });
       artPlayerRef.current.plugins.artplayerPluginDanmuku.load();
@@ -118,6 +120,7 @@ export function usePlayer({
     const hasEnabledDanmaku = danmakuSources.some((s) => s.enabled);
     if (hasEnabledDanmaku) {
       const isMovie = videoDetail.episodes?.length === 1;
+      const currentUrl = videoDetail.episodes?.[currentEpisodeIndex];
       artPlayerRef.current.plugins.artplayerPluginDanmuku.config({
         danmuku: createDanmakuLoader(
           danmakuSources,
@@ -125,6 +128,7 @@ export function usePlayer({
           currentTitle,
           currentEpisodeIndex,
           isMovie,
+          currentUrl,
         ),
       });
       artPlayerRef.current.plugins.artplayerPluginDanmuku.load();
@@ -158,6 +162,7 @@ export function usePlayer({
 
       const { danmakuSources } = useSettingsStore.getState();
       const hasEnabledDanmaku = danmakuSources.some((s) => s.enabled);
+      const currentUrl = videoDetail.episodes?.[realtimeCurrentEpisodeIndex];
 
       // 根据是否有启用的弹幕源决定是否加载弹幕
       const danmakuLoader = hasEnabledDanmaku
@@ -167,6 +172,7 @@ export function usePlayer({
           currentTitle,
           realtimeCurrentEpisodeIndex,
           videoDetail.episodes?.length === 1,
+          currentUrl,
         )
         : () => Promise.resolve([]);
 
