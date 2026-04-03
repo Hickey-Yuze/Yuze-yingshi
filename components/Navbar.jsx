@@ -5,6 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { usePlayHistoryStore } from "@/store/usePlayHistoryStore";
 import { useFavoritesStore } from "@/store/useFavoritesStore";
 import { useSearchScrollStore } from "@/store/useSearchScrollStore";
+import { useSettingsStore } from "@/store/useSettingsStore";
 import { formatTimeShort } from "@/lib/util";
 import Image from "next/image";
 import Link from "next/link";
@@ -39,6 +40,23 @@ export function Navbar() {
   const favorites = useFavoritesStore((state) => state.favorites);
   const removeFavorite = useFavoritesStore((state) => state.removeFavorite);
   const clearFavorites = useFavoritesStore((state) => state.clearFavorites);
+
+  // 设置密码状态
+  const settingsPassword = useSettingsStore((state) => state.settingsPassword);
+  const isSettingsUnlocked = useSettingsStore((state) => state.isSettingsUnlocked);
+
+  const handleSettingsClick = (e) => {
+    if (settingsPassword && !isSettingsUnlocked) {
+      e.preventDefault();
+      const password = prompt("请输入设置密码:");
+      const verifyPassword = useSettingsStore.getState().verifyPassword;
+      if (!verifyPassword(password)) {
+        alert("密码错误");
+        return;
+      }
+    }
+    router.push("/settings");
+  };
 
   // 点击外部关闭下拉菜单
   useEffect(() => {
@@ -334,15 +352,15 @@ export function Navbar() {
             )}
           </div>
 
-          <Link
-            href="/settings"
+          <button
+            onClick={handleSettingsClick}
             aria-label="Settings"
             suppressHydrationWarning
             className={`flex items-center justify-center size-10 rounded-full hover:bg-gray-100 text-gray-500 hover:text-gray-900 transition-colors cursor-pointer btn-press ${pathname === "/settings" ? "bg-primary text-white" : ""
               }`}
           >
             <MaterialSymbolsSettingsOutlineRounded className="text-2xl" />
-          </Link>
+          </button>
         </div>
       </header>
     </div>

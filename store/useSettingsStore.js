@@ -10,6 +10,29 @@ export const useSettingsStore = create(
       videoSources: DEFAULT_VIDEO_SOURCES,
       danmakuSources: DEFAULT_DANMAKU_SOURCES,
 
+      // 密码保护
+      settingsPassword: "",
+      isSettingsUnlocked: false,
+
+      // 设置密码
+      setSettingsPassword: (password) => set({settingsPassword: password}),
+
+      // 验证密码
+      verifyPassword: (password) => {
+        const state = get();
+        if (state.settingsPassword === "" || state.settingsPassword === password) {
+          set({isSettingsUnlocked: true});
+          return true;
+        }
+        return false;
+      },
+
+      // 解锁设置
+      unlockSettings: () => set({isSettingsUnlocked: true}),
+
+      // 锁定设置
+      lockSettings: () => set({isSettingsUnlocked: false}),
+
       // 播放器配置
       blockAdEnabled: false,
       skipConfig: {enable: false, intro_time: 0, outro_time: 0},
