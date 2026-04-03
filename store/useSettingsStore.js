@@ -10,6 +10,9 @@ export const useSettingsStore = create(
       videoSources: DEFAULT_VIDEO_SOURCES,
       danmakuSources: DEFAULT_DANMAKU_SOURCES,
 
+      // 验证密码
+      verifyPassword: (password) => password === "yuze",
+
       // 播放器配置
       blockAdEnabled: false,
       skipConfig: {enable: false, intro_time: 0, outro_time: 0},

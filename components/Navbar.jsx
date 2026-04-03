@@ -5,6 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { usePlayHistoryStore } from "@/store/usePlayHistoryStore";
 import { useFavoritesStore } from "@/store/useFavoritesStore";
 import { useSearchScrollStore } from "@/store/useSearchScrollStore";
+import { useSettingsStore } from "@/store/useSettingsStore";
 import { formatTimeShort } from "@/lib/util";
 import Image from "next/image";
 import Link from "next/link";
@@ -39,6 +40,25 @@ export function Navbar() {
   const favorites = useFavoritesStore((state) => state.favorites);
   const removeFavorite = useFavoritesStore((state) => state.removeFavorite);
   const clearFavorites = useFavoritesStore((state) => state.clearFavorites);
+
+  // 密码验证
+  const verifyPassword = useSettingsStore((state) => state.verifyPassword);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [passwordInput, setPasswordInput] = useState("");
+
+  const handleSettingsClick = () => {
+    setPasswordInput("");
+    setShowPasswordModal(true);
+  };
+
+  const handlePasswordSubmit = () => {
+    if (verifyPassword(passwordInput)) {
+      setShowPasswordModal(false);
+      router.push("/settings");
+    } else {
+      alert("密码错误");
+    }
+  };
 
   // 点击外部关闭下拉菜单
   useEffect(() => {
@@ -132,17 +152,17 @@ export function Navbar() {
         >
           <div className="relative group-hover:scale-105 transition-transform duration-200">
             <Image
-              src="https://tncache1-f1.v3mh.com/image/2026/01/14/67727e3ade57c7062ef81a16d4f711a0.png"
-              alt="NextTV"
-              width={24}
-              height={24}
-              className="w-6 h-6 object-contain"
+              src="https://imgbed.gengyu.de5.net/file/1772363076545_logo.jpg"
+              alt="Yuze-影视"
+              width={32}
+              height={32}
+              className="w-8 h-8 object-contain rounded-full"
             />
           </div>
           <div className="flex flex-col justify-center h-full">
             <h1 className="text-xl font-extrabold leading-none tracking-tight">
-              <span className="text-gray-900">Next</span>
-              <span className="text-primary">TV</span>
+              <span className="text-gray-900">Yuze</span>
+              <span className="text-gray-900">-影视</span>
             </h1>
             <span className="text-[10px] text-gray-500 text-center font-medium tracking-wide group-hover:text-primary transition-colors">
               影视无限畅享
@@ -155,30 +175,6 @@ export function Navbar() {
         </div>
 
         <div className="flex items-center gap-3">
-          <Link
-            href="https://github.com/SeqCrafter/NextTV"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="GitHub"
-            className="flex items-center justify-center size-10 rounded-full hover:bg-gray-100 text-gray-500 hover:text-gray-900 transition-colors btn-press"
-          >
-            <SimpleIconsGithub
-              aria-hidden="true"
-              className="size-5"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            />
-          </Link>
-
-          {/* Direct Play Link */}
-          <Link
-            href="/direct-input"
-            aria-label="直链播放"
-            className={`flex items-center justify-center size-10 rounded-full hover:bg-gray-100 text-gray-500 hover:text-gray-900 transition-colors cursor-pointer btn-press ${pathname === "/direct-input" ? "bg-gray-100 text-gray-900" : ""}`}
-          >
-            <MaterialSymbolsDirectionsAltOutlineRounded className="text-2xl" />
-          </Link>
-
           {/* History Dropdown */}
           <div className="static md:relative" ref={dropdownRef}>
             <button
@@ -358,16 +354,49 @@ export function Navbar() {
             )}
           </div>
 
-          <Link
-            href="/settings"
+          <button
+            onClick={handleSettingsClick}
             aria-label="Settings"
-            className={`flex items-center justify-center size-10 rounded-full hover:bg-gray-100 text-gray-500 hover:text-gray-900 transition-colors cursor-pointer btn-press ${pathname === "/settings" ? "bg-gray-100 text-gray-900" : ""
+            suppressHydrationWarning
+            className={`flex items-center justify-center size-10 rounded-full hover:bg-gray-100 text-gray-500 hover:text-gray-900 transition-colors cursor-pointer btn-press ${pathname === "/settings" ? "bg-primary text-white" : ""
               }`}
           >
             <MaterialSymbolsSettingsOutlineRounded className="text-2xl" />
-          </Link>
+          </button>
         </div>
       </header>
+
+      {/* Password Modal */}
+      {showPasswordModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowPasswordModal(false)}>
+          <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-xl font-bold text-gray-900 mb-4">请输入设置密码</h3>
+            <input
+              type="password"
+              value={passwordInput}
+              onChange={(e) => setPasswordInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handlePasswordSubmit()}
+              className="w-full px-4 py-3 border border-gray-200 rounded-xl mb-4 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+              placeholder="请输入密码"
+              autoFocus
+            />
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowPasswordModal(false)}
+                className="flex-1 px-4 py-2.5 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+              >
+                取消
+              </button>
+              <button
+                onClick={handlePasswordSubmit}
+                className="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition-colors"
+              >
+                确认
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

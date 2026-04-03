@@ -12,6 +12,10 @@ export function MovieCard({ movie, showSpeedTest = true }) {
   const doubanImageProxy = useSettingsStore((state) => state.doubanImageProxy);
   const clearScrollPosition = useSearchScrollStore((state) => state.clearScrollPosition);
 
+  if (!movie.poster) {
+    return null;
+  }
+
   let douban_image_url = movie.poster;
 
   // 只代理豆瓣的图片
