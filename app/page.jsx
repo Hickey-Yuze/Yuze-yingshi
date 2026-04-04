@@ -32,8 +32,13 @@ export default function Home() {
   const playHistory = usePlayHistoryStore((state) => state.playHistory);
   // 获取豆瓣代理设置
   const doubanProxy = useSettingsStore((state) => state.doubanProxy);
+  // 加载服务器设置
+  const loadSettingsFromServer = useSettingsStore((state) => state.loadSettingsFromServer);
 
   useEffect(() => {
+    // 首次加载时从服务器获取设置
+    loadSettingsFromServer();
+    
     const { movieTags: loadedMovieTags, tvTags: loadedTvTags } = loadUserTags();
     setMovieTags(loadedMovieTags);
     setTvTags(loadedTvTags);
